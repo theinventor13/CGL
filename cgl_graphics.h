@@ -1,21 +1,21 @@
 
 
 
-#define plot(x, y) 							SDL_RenderDrawPoint(cgl_default_window.renderer_handle, x, y);
+#define plot(x, y) 							SDL_RenderDrawPoint((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, x, y);
 
-#define line(x1, y1, x2, y2)				SDL_RenderDrawLine(cgl_default_window.renderer_handle, x1, y1, x2, y2);
+#define line(x1, y1, x2, y2)				SDL_RenderDrawLine((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, x1, y1, x2, y2);
 	
 #define rect(cx, cy, cw, ch) 				{cgl_rmask.x = cx;\
 											cgl_rmask.y = cy; \
 											cgl_rmask.w = cw; \
 											cgl_rmask.h = ch; \
-											SDL_RenderDrawRect(cgl_default_window.renderer_handle, &cgl_rmask);}
+											SDL_RenderDrawRect((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, &cgl_rmask);}
 									
 #define fillrect(cx, cy, cw, ch)			{cgl_rmask.x = cx;\
 											cgl_rmask.y = cy; \
 											cgl_rmask.w = cw; \
 											cgl_rmask.h = ch; \
-											SDL_RenderFillRect(cgl_default_window.renderer_handle, &cgl_rmask);}
+											SDL_RenderFillRect((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, &cgl_rmask);}
 											
 #define triangle(x1, y1, x2, y2, x3, y3) 	{line(x1, y1, x2, y2);\
 											line(x2, y2, x3, y3); \
@@ -26,20 +26,20 @@
 											cgl_dcolor.g = cg;               \
 											cgl_dcolor.b = cb;               \
 											cgl_dcolor.a = SDL_ALPHA_OPAQUE; \
-											SDL_SetRenderDrawColor(cgl_default_window.renderer_handle, cgl_dcolor.r, cgl_dcolor.g, cgl_dcolor.b, cgl_dcolor.a);}//make variadic with color type
+											SDL_SetRenderDrawColor((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, cgl_dcolor.r, cgl_dcolor.g, cgl_dcolor.b, cgl_dcolor.a);}//make variadic with color type
 	
 	
 #define acolor(cr, cg, cb, ca)				{cgl_dcolor.r = cr;\
 											cgl_dcolor.g = cg; \
 											cgl_dcolor.b = cb; \
 											cgl_dcolor.a = ca; \
-											SDL_SetRenderDrawColor(cgl_default_window.renderer_handle, cgl_dcolor.r, cgl_dcolor.g, cgl_dcolor.b, cgl_dcolor.a);} //make variadic with color type
+											SDL_SetRenderDrawColor((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, cgl_dcolor.r, cgl_dcolor.g, cgl_dcolor.b, cgl_dcolor.a);} //make variadic with color type
 	
 #define clscolor(cr, cg, cb)				{cgl_ccolor.r = cr;              \
 											cgl_ccolor.g = cg;               \
 											cgl_ccolor.b = cb;               \
 											cgl_ccolor.a = SDL_ALPHA_OPAQUE; \
-											SDL_SetRenderDrawColor(cgl_default_window.renderer_handle, cgl_ccolor.r, cgl_ccolor.g, cgl_ccolor.b, cgl_ccolor.a);} //make variadic with color type
+											SDL_SetRenderDrawColor((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, cgl_ccolor.r, cgl_ccolor.g, cgl_ccolor.b, cgl_ccolor.a);} //make variadic with color type
 
 
 											

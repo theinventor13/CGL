@@ -1,7 +1,6 @@
 #define drawimage(file, cx, cy)				{file.image_transform.x = cx; \
 											file.image_transform.y = cy; \
-											SDL_RenderCopyEx(cgl_default_window.renderer_handle, file.image_data, &(file.image_clip), &(file.image_transform), file.image_rotation, NULL, file.image_flip);}
-											
+											SDL_RenderCopyEx((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, file.image_data, &(file.image_clip), &(file.image_transform), file.image_rotation, NULL, file.image_flip);}
 											
 #define rotateimage(file, deg)				file.image_rotation = deg;
 
@@ -22,9 +21,10 @@
 											file.image_clip.y = ct;                          \
 											file.image_clip.w = file.image_info.w - cl - cr; \
 											file.image_clip.h = file.image_info.h - ct - cb; }
-											
-											
+																			
 typedef struct{
+	
+	SDL_Surface * buffer_data;
 	SDL_Texture * image_data;
 	SDL_Rect image_info;
 	SDL_Rect image_clip;
@@ -35,13 +35,15 @@ typedef struct{
 	int w;
 	int h;
 	bool center_change;
-}image;				
+	
+}image;	
 
-image cgl_image_load;											
-SDL_Surface * cgl_surface_load;
+SDL_Surface * cgl_surface_load;			
 SDL_Texture * cgl_texture_load;
+image cgl_image_load;
 
 void cgl_image_defaults(){
+	
 	cgl_image_load.image_clip.x = cgl_image_load.image_clip.y = 0;
 	SDL_QueryTexture(cgl_image_load.image_data, NULL, NULL, &(cgl_image_load.image_clip.w), &(cgl_image_load.image_clip.h));
 	cgl_image_load.image_info = cgl_image_load.image_clip;
@@ -51,21 +53,34 @@ void cgl_image_defaults(){
 	cgl_image_load.image_rotation = 0.0;
 	cgl_image_load.image_center.x = cgl_image_load.image_center.y = 0;
 	cgl_image_load.image_flip = SDL_FLIP_NONE;
-	SDL_FreeSurface(cgl_surface_load);
+	return;
+	
 }
 
 image loadimage(char * file){
-	cgl_surface_load = IMG_Load(file);
-	if(cgl_surface_load == NULL){
-		printf("Image \"%s\" could not be loaded: %s\n", file, IMG_GetError());
+	
+	
+	
+	cgl_image_load.buffer_data = IMG_Load(file);
+	
+	if(cgl_image_load.buffer_data == NULL){
+		
+		cgl_lap_error("Image \"%s\" could not be loaded: %s", file, IMG_GetError());
 		cgl_image_load.image_data = NULL;
 		return cgl_image_load;
+		
 	}
-	cgl_image_load.image_data = SDL_CreateTextureFromSurface(cgl_default_window.renderer_handle, cgl_surface_load);
+	
+	cgl_image_load.image_data = SDL_CreateTextureFromSurface((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, cgl_image_load.buffer_data);
+	
 	if(cgl_image_load.image_data == NULL){
-		printf("Image \"%s\" could not be optimized: %s\n", file, IMG_GetError());
+		
+		cgl_lap_error("Surface \"%s\" could not be converted: %s", file, IMG_GetError());
 		return cgl_image_load;
+		
 	}
-	cgl_image_defaults();
+	
+	cgl_image_defaults(cgl_image_load);
 	return cgl_image_load;
+	
 }									

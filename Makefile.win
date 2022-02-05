@@ -1,0 +1,25 @@
+# Project: CGL
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe -D__DEBUG__
+CC       = gcc.exe -D__DEBUG__
+WINDRES  = windres.exe
+OBJ      = 
+LINKOBJ  = 
+LIBS     = -L"E:/Programs/Dev-Cpp/MinGW64/lib" -L"E:/Programs/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -L"E:/SDL2/x86_64-w64-mingw32/lib" -static-libgcc -lmingw32  -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -luser32 -g3
+INCS     = -I"E:/Programs/Dev-Cpp/MinGW64/include" -I"E:/Programs/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"E:/Programs/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"E:/SDL2/x86_64-w64-mingw32/include/SDL2"
+CXXINCS  = -I"E:/Programs/Dev-Cpp/MinGW64/include" -I"E:/Programs/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"E:/Programs/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"E:/Programs/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"E:/SDL2/x86_64-w64-mingw32/include/SDL2"
+BIN      = CGL.exe
+CXXFLAGS = $(CXXINCS) -g3 -std=c11
+CFLAGS   = $(INCS) -g3 -std=c11
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o $(BIN) $(LIBS)

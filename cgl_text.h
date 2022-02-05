@@ -37,7 +37,7 @@ void cgl_text(int params, int x, int y, const char * string){
 		return;
 	}
 	printf("here\n");
-	cgl_texture_load = SDL_CreateTextureFromSurface(cgl_default_window.renderer_handle, cgl_surface_load);
+	cgl_texture_load = SDL_CreateTextureFromSurface((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, cgl_surface_load);
 	if(cgl_texture_load == NULL){
 		printf("Could not optimize font\n");
 		return;
@@ -47,7 +47,7 @@ void cgl_text(int params, int x, int y, const char * string){
 	//printf("here\n");
 	SDL_QueryTexture(cgl_texture_load, NULL, NULL, &(cgl_dmask.w), &(cgl_dmask.h));
 	//printf("here\n");
-	SDL_RenderCopy(cgl_default_window.renderer_handle, cgl_texture_load, NULL, &cgl_dmask);
+	SDL_RenderCopy((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, cgl_texture_load, NULL, &cgl_dmask);
 	//printf("here\n");
 	SDL_FreeSurface(cgl_surface_load);
 	SDL_DestroyTexture(cgl_texture_load);
@@ -63,7 +63,7 @@ image imagetext(const char * string){
 		cgl_image_load.image_data = NULL;
 		return cgl_image_load;
 	}
-	cgl_image_load.image_data = SDL_CreateTextureFromSurface(cgl_default_window.renderer_handle, cgl_surface_load);
+	cgl_image_load.image_data = SDL_CreateTextureFromSurface((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, cgl_surface_load);
 	if(cgl_image_load.image_data == NULL){
 		printf("Could not optimize font\n");
 		return cgl_image_load;

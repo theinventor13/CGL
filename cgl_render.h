@@ -2,11 +2,11 @@
 #define pointeron()							SDL_ShowCursor(SDL_ENABLE);		
 #define pointeroff()						SDL_ShowCursor(SDL_DISABLE);	
 
-#define cls()								{SDL_SetRenderDrawColor(cgl_default_window.renderer_handle, cgl_ccolor.r, cgl_ccolor.g, cgl_ccolor.b, cgl_ccolor.a);\
-											SDL_RenderClear(cgl_default_window.renderer_handle);																\
-											SDL_SetRenderDrawColor(cgl_default_window.renderer_handle, cgl_dcolor.r, cgl_dcolor.g, cgl_dcolor.b, cgl_dcolor.a);}	
+#define cls()								{SDL_SetRenderDrawColor((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, cgl_ccolor.r, cgl_ccolor.g, cgl_ccolor.b, cgl_ccolor.a);\
+											SDL_RenderClear((cgl_all_windows.array[cgl_active_window_id]).renderer_handle);																\
+											SDL_SetRenderDrawColor((cgl_all_windows.array[cgl_active_window_id]).renderer_handle, cgl_dcolor.r, cgl_dcolor.g, cgl_dcolor.b, cgl_dcolor.a);}	
 	
-#define render()							SDL_RenderPresent(cgl_default_window.renderer_handle);
+#define render()							SDL_RenderPresent((cgl_all_windows.array[cgl_active_window_id]).renderer_handle);
 
 #define init()								{if(SDL_Init(SDL_INIT_VIDEO) < 0)                                         \
 												printf("Video could not initialize: %s\n", SDL_GetError());           \
@@ -14,7 +14,7 @@
                 								printf("Image display library failed to load: %s\n", IMG_GetError()); \
                 							if(TTF_Init() == -1)                                                      \
                 								printf("Text display library failed to load\n");                      \
-											SDL_DisableScreenSaver();}
+											SDL_DisableScreenSaver();}													
 											
 											
 int screenwidth;
@@ -47,7 +47,7 @@ cgl_window_DA cgl_window_DA_make(uint64_t size){
 	cgl_window_DA temp;
 	temp.array = malloc(size * sizeof(cgl_window));
 	if(temp.array == NULL){
-		printf("Couldn't allocate cgl_window_DA array");
+		cgl_error(true, true, "Couldn't allocate cgl_window_DA array");
 	}
 	temp.dc = 0;
 	temp.index = 0;
@@ -89,7 +89,7 @@ void cgl_window_DA_delete(cgl_window_DA * DA, uint64_t index){
 
 void cgl_window_DA_print(cgl_window_DA DA, uint64_t index){
 	//customize
-	printf("%i ", DA.array[index]);
+	printf("%i", DA.array[index]);
 	return;
 	
 }
@@ -97,7 +97,6 @@ void cgl_window_DA_print(cgl_window_DA DA, uint64_t index){
 //global stuff
 uint64_t cgl_active_window_id; //window currently being drawn to
 cgl_window_DA cgl_all_windows; //array containing info of all windows
-cgl_window cgl_default_window;
 
 #define cgl_window_DA_get(DA, index) DA.array[index]
 
@@ -122,9 +121,10 @@ void cgl_render_init(void){
 	
 	cgl_all_windows = cgl_window_DA_make(10);
 	return;
+	
 }
 
-cgl_window cgl_makewindow(int w, int h, const char * text, bool fullscreen){
+int cgl_makewindow(int w, int h, const char * text, bool fullscreen){
 
 	cgl_window new_window;
 	new_window.w = w;
@@ -134,7 +134,8 @@ cgl_window cgl_makewindow(int w, int h, const char * text, bool fullscreen){
 	
 	if(new_window.window_handle == NULL){
 		
-		printf("Window could not be created: %s\n", SDL_GetError());
+		cgl_lap_error("Window could not be created: %s", SDL_GetError());
+		return 1;
 		
 	}else{
 		
@@ -143,10 +144,18 @@ cgl_window cgl_makewindow(int w, int h, const char * text, bool fullscreen){
 		if(new_window.renderer_handle == NULL){
 			
 			new_window.renderer_handle = SDL_CreateRenderer(new_window.window_handle, -1, SDL_RENDERER_SOFTWARE);
-			if(new_window.renderer_handle == NULL)
-				printf("Renderer could not be created: %s\n", SDL_GetError());
-			else
-				printf("Accelerated renderer could not be created, falling back to software renderer\n");
+			
+			if(new_window.renderer_handle == NULL){
+				
+				cgl_lap_error("Renderer could not be created: %s", SDL_GetError());
+				return 1;
+				
+			}else{
+				
+				//change to message
+				cgl_lap_error("Accelerated renderer could not be created, falling back to software renderer");
+				
+			}
 				
 		}else{
 			
@@ -154,6 +163,10 @@ cgl_window cgl_makewindow(int w, int h, const char * text, bool fullscreen){
 			SDL_SetRenderDrawBlendMode(new_window.renderer_handle, SDL_BLENDMODE_BLEND);
 			SDL_SetRenderDrawColor(new_window.renderer_handle, 0, 0, 0, SDL_ALPHA_OPAQUE);
 			SDL_RenderClear(new_window.renderer_handle);
+			
+			cgl_active_window_id = cgl_all_windows.index;
+			cgl_window_DA_put(&cgl_all_windows, new_window);
+			
 			//MOVE THIS
 			cgl_ccolor.r = cgl_ccolor.g = cgl_ccolor.b = 0;
 			cgl_ccolor.a = SDL_ALPHA_OPAQUE;
@@ -162,12 +175,18 @@ cgl_window cgl_makewindow(int w, int h, const char * text, bool fullscreen){
 			//MOVE THIS
 			
 		}
+		
 	}
 	
-	return new_window;
+	return 0;
 	
 }			
 
 void cgl_deletewindow(uint64_t id){
+	
+	SDL_DestroyRenderer((cgl_all_windows.array[id]).renderer_handle);
+	SDL_DestroyWindow((cgl_all_windows.array[id]).window_handle);
+	(cgl_all_windows.array[id]).active = false;
 	return;
+	
 }						
