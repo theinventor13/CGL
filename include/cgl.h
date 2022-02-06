@@ -38,7 +38,7 @@ void cgl_init_log(void){	//prepend unix timestamp to logfile name
 void cgl_error(bool log, bool print, const char * string, ...){
 	
 	va_list args;
-	va_start(args, string);
+	//va_start(args, string);
 	char timeinfo[100] = "?";
 	time_t ctime = time(NULL);
 	struct tm * ltime = localtime(&ctime);

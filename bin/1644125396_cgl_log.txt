@@ -1,0 +1,3 @@
+ERROR - 02/06/22 00:29:56 Image "E:ProjectsCGLmediadiatomaceous_earth_under_the_microscope.png" could not be loaded: Couldn't open E:ProjectsCGLmediadiatomaceous_earth_under_the_microscope.png
+ERROR - 02/06/22 00:30:04 Big problem 2, 2.200000
+ERROR - 02/06/22 00:30:04 Big problem 3, 3.300000

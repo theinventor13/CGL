@@ -4,7 +4,7 @@ typedef struct{
 	bool released;
 }cgl_key;
 
-#define keycount 237
+#define keycount 238
 
 int allkeys[keycount] = {
 	SDL_SCANCODE_0,

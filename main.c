@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "cgl.h"
+#include <cgl.h>
 
 int main(int argc, char **argv){
 	cgl_init_log();
+	SDL_SetHintWithPriority("SDL_HINT_RENDER_VSYNC", "1", SDL_HINT_OVERRIDE);
 	screen(1000, 1000);
 	float step = 255.0f / screenheight;
 	double rot = 0.0f;
-	image mypic = loadimage("diatomaceous_earth_under_the_microscope.png");
+	image mypic = loadimage("E:\Projects\CGL\media\diatomaceous_earth_under_the_microscope.png");
 	
 	imagesize(mypic, 800, 800);
 	imageclip(mypic, 100, 100, 100, 100);
